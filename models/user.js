@@ -9,7 +9,7 @@ const userSchema = new Schema({
   password: {type: String, required: true},
   owner: {type: Boolean,default: false},
   vehicles: [{type: Schema.Types.ObjectId, ref: "Vehicle"}],
-  rentals: [{type: Schema.Types.ObjectId, ref: "Rental"}]
+  borrowList: [{type: Schema.Types.ObjectId, ref: "Borrow"}]
 }, {
   timestamps: {
     createdAt: 'created_at',

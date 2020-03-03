@@ -42,11 +42,10 @@ Let’s make this world more easy and friendly =)
 | `/login`                        | LoginPage         | anon only       | Login form, link to signup, navigate to home directory after login  |
 | `/logout`                       | n/a               | anon only       | Navigate to public login page after logout, expire session          |
 | `/search`                       | SearchVehicle     | user            | Show Map with all the vehicles ready for borrow                     |
-| `/search/:vehicleId`            | Vehicle           | user            | Show details of the vehicle                                         |
+| `/search/:vehicleId`            | VehicleDetailsPage  | user          | Show details of the vehicle available to borrow                     |
 | `/my-vehicles`                  | VehiclesPage      | user            | Show a list of all the vehicles                                     |
-| `/my-vehicles/:vehicleId`       | Vehicle           | user            | Show details of one vehicle                                         |
+| `/my-vehicles/:vehicleId`       | VehicleProfilePage  | user          | Show details of one vehicle                                         |
 | `/notifications`                | NotificationsPage | user            | Show a list of all the vehicles                                     |
-| `/notifications/:notificationId`| Notification      | user            | Show details of one notification                                    |
 | `/borrow/:borrowId`             | Borrow            | user            | Show details of the borrow                                          |
 | `/my-profile`                   | ProfilePage       | user            | Show details of the user profile                                    |
 
@@ -89,10 +88,10 @@ Let’s make this world more easy and friendly =)
   - vehicle.create(body)
   - vehicle.delete(id)
 
-- Rent Service
-  - rent.create(body)
-  - rent.getOne(id)
-  - rent.getOneAndUpdate(id, body)
+- Borrow Service
+  - borrow.create(body)
+  - borrow.getOne(id)
+  - borrow.getOneAndUpdate(id, body)
 
   <br>
   <br>
@@ -112,7 +111,7 @@ Let’s make this world more easy and friendly =)
     password: {type: String, required: true},
     owner: {type: Boolean, default: false},
     vehicles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"}],
-    rentals: [{ type: mongoose.Schema.Types.ObjectId, ref: "Rental"}]
+    borrowList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Borrow"}]
   }
   ```
 
@@ -130,7 +129,7 @@ Let’s make this world more easy and friendly =)
   ```
 
 
-  Rental model
+  Borrow model
 
   ```javascript
   {
@@ -158,7 +157,7 @@ Let’s make this world more easy and friendly =)
 | POST        | `/vechicles`            | {type,ownerId}               | 200            | 404          | create new vehicle                                        |
 | PUT         | `/vehicles/:vehicleId`  | {vehicleId, latitude, longitude} | 201         | 400          | edit a specific vehicle                                   |
 | DELETE      | `/vehicle/:vehicleId`   | {vehicleId}                  | 200            | 400          | delete specific vehicle                                   |
-| GET         | `/rentals/:userId`      | {userId}                     | 201            | 400          | show user rentals                                         |
+| GET         | `/borrow/:userId`      | {userId}                     | 201            | 400          | show user borrow list                                         |
 
 <br>
 

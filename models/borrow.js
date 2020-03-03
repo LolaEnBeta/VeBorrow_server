@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const rentalSchema = new Schema({
+const borrowSchema = new Schema({
   ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
   renterId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
   vehicleId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"}],
@@ -13,6 +13,6 @@ const rentalSchema = new Schema({
   },
 });
 
-const Rental = mongoose.model('Rental', rentalSchema);
+const Borrow = mongoose.model('Borrow', borrowSchema);
 
-module.exports = Rental;
+module.exports = Borrow;

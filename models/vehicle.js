@@ -6,7 +6,7 @@ const vehicleSchema = new Schema({
   ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
   latitude: {type: String},
   longitude: {type: String},
-  available: {type: Boolean}
+  available: {type: Boolean, default: false}
 }, {
   timestamps: {
     createdAt: 'created_at',
