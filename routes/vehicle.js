@@ -11,7 +11,7 @@ const {
   validationLogin
 } = require("../helpers/middlewares");
 
-
+// POST /vehicles
 router.post('/', isLoggedIn, async (req, res, next) => {
   const { type } = req.body;
   const ownerId = req.session.currentUser._id;
@@ -31,6 +31,20 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     res
       .status(201)
       .json(vehicle);
+  } catch (error) {
+    next(createError(error));
+  }
+});
+
+// GET /vehicles
+router.get('/', isLoggedIn, async (req, res, next) => {
+
+  try {
+    const vehiclesList = await Vehicle.find();
+
+    res
+      .status(200)
+      .json(vehiclesList);
   } catch (error) {
     next(createError(error));
   }
