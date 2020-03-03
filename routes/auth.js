@@ -3,7 +3,7 @@ const router = express.Router();
 const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const User = require("../models/user");
+const User = require("../models/User");
 
 // HELPER FUNCTIONS
 const {
@@ -23,7 +23,7 @@ router.post('/signup', isNotLoggedIn, validationLogin, async (req, res, next) =>
     else {
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashPass = bcrypt.hashSync(password, salt);
-      const newUser = await User.create({ firstName, lastName, email, phoneNumber, password: hashPass });
+      const newUser = await User.create({ firstName, lastName, email, phoneNumber, password: hashPass,  vehicles: [], borrowLlist: [] });
 
       newUser.password = "*";
       req.session.currentUser = newUser;
