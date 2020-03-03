@@ -11,6 +11,7 @@ require('dotenv').config();
 
 const auth = require('./routes/auth');
 const user = require('./routes/user');
+const vehicle = require('./routes/vehicle');
 
 
 // MONGOOSE CONNECTION
@@ -63,6 +64,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ROUTER MIDDLEWARE
 app.use('/auth', auth);
 app.use('/user', user);
+app.use('/vehicles', vehicle);
 
 
 // 404 
