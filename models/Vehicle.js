@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const vehicleSchema = new Schema({
   type: {type: String, required: true, enum: ["bike", "motorcycle", "car", "scooter", "electric scooter"]},
-  ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+  ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
   latitude: {type: String},
   longitude: {type: String},
   available: {type: Boolean, default: false}
