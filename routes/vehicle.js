@@ -37,6 +37,21 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 });
 
 // GET /vehicles
+router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
+  const { vehicleId } = req.params;
+
+  try {
+    const vehicle = await Vehicle.findById(vehicleId);
+
+    res
+      .status(200)
+      .json(vehicle);
+  } catch (error) {
+    next(createError(error));
+  }
+})
+
+// GET /vehicles
 router.get('/', isLoggedIn, async (req, res, next) => {
 
   try {
