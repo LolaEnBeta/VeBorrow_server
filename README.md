@@ -1,6 +1,6 @@
 # VeBorrow App
 
-##Description
+## Description
 Imagine that you are in the city and need to go somewhere, but you don’t want to pay the expensive price for metro/bus tickets, or you don’t have any account to rent the public bikes… If this happens to you, VeBorrow is your solution!
 VeBorrow is an app where the users can borrow the vehicles (bikes, electric scooters, cars, motorcycle..) from other users, without paying any cost.
 Also, you can borrow your vehicle to other users that are in the same situation as you.
@@ -124,7 +124,8 @@ Let’s make this world more easy and friendly =)
     type: {type: String, required: true, enum: ["bike", "motorcycle", "car", "scooter", "electric scooter"]},
     ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
     latitude: {type: String},
-    longitude: {type: String}
+    longitude: {type: String},
+    available: {type: Boolean}
   }
   ```
 
@@ -135,8 +136,8 @@ Let’s make this world more easy and friendly =)
   {
     ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
     renterId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+    vehicleId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"}],
     message: {type: String},
-    available: {type: Boolean}
   }
   ```
 
