@@ -36,6 +36,22 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// PUT /vehicle/:vehicleId
+router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
+  const { vehicleId } = req.params;
+  const { latitude, longitude, available } = req.body;
+
+  try {
+    const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicleId}, {latitude, longitude, available}, {new: true});
+
+    res
+      .status(201)
+      .json(vehicleUpdated);
+  } catch (error) {
+    next(createError(error));
+  }
+})
+
 // GET /vehicles
 router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
