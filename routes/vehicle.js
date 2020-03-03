@@ -52,6 +52,21 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
   }
 })
 
+// DELETE /vehicle/:vehicleId
+router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
+  const { vehicleId } = req.params;
+
+  try {
+    await Vehicle.findByIdAndDelete(vehicleId);
+
+    res
+      .status(200)
+      .send();
+  } catch (error) {
+    next(createError(error));
+  }
+})
+
 // GET /vehicles
 router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
