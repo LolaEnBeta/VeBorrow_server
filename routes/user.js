@@ -32,6 +32,21 @@ router.put('/:userId', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// DELETE /user/:userId
+router.delete('/:userId', isLoggedIn, async (req, res, next) => {
+  const { userId } = req.params;
+
+  try {
+    await User.deleteOne({_id: userId});
+
+    res
+      .status(200)
+      .send();
+  } catch (error) {
+    next(createError(error));
+  }
+})
+
 // GET /user/:userId
 router.get('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
