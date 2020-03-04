@@ -35,6 +35,27 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// PUT /borrow/:borrowId
+router.put('/:borrowId', isLoggedIn, async (req, res, next) => {
+  const { borrowId } = req.params;
+  const { completed } = req.body;
+
+  try {
+    const borrow = await Borrow.findById(borrowId);
+
+    if (!borrow) return next(createError(404));
+    else {
+      const borrowCompleted = await Borrow.findByIdAndUpdate({_id: borrowId}, {completed}, {new: true});
+
+      res
+        .status(201)
+        .json(borrowCompleted);
+    }
+  } catch (error) {
+    next(createError(error));
+  }
+})
+
 // GET /borrow
 router.get('/', isLoggedIn, async (req, res, next) => {
   const userId = req.session.currentUser._id;
