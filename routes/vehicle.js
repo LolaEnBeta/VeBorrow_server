@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const createError = require("http-errors");
 
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
@@ -20,6 +21,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const vehicle = await Vehicle.create({ type, ownerId });
 
     const user = await User.findById(ownerId);
+    if (!user) return next(createError(error));
 
     user.vehicles.push(vehicle._id);
 
@@ -42,11 +44,15 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { latitude, longitude, available } = req.body;
 
   try {
-    const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicleId}, {latitude, longitude, available}, {new: true});
+    const vehicle = await Vehicle.findById(vehicleId);
+    if(!vehicle) return next(createError(404));
+    else {
+      const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id}, {latitude, longitude, available}, {new: true});
 
-    res
-      .status(201)
-      .json(vehicleUpdated);
+      res
+        .status(201)
+        .json(vehicleUpdated);
+    }
   } catch (error) {
     next(createError(error));
   }
@@ -57,11 +63,16 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
 
   try {
-    await Vehicle.findByIdAndDelete(vehicleId);
+    const vehicle = await Vehicle.findById(vehicleId);
 
-    res
-      .status(200)
-      .send();
+    if (!vehicle) return next(createError(404));
+    else {
+      await Vehicle.findByIdAndDelete(vehicleId);
+
+      res
+        .status(200)
+        .send();
+    }
   } catch (error) {
     next(createError(error));
   }
@@ -73,10 +84,12 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
 
   try {
     const vehicle = await Vehicle.findById(vehicleId);
-
-    res
-      .status(200)
-      .json(vehicle);
+    if (!vehicle) return next(createError(404));
+    else {
+      res
+        .status(200)
+        .json(vehicle);
+    }
   } catch (error) {
     next(createError(error));
   }

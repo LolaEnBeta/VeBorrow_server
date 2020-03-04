@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const createError = require("http-errors");
 
 const User = require("../models/User");
 
@@ -13,19 +14,21 @@ const {
 // PUT /user/:userId
 router.put('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
-  const { firstName, lastName, phoneNumber, owner } = req.body;
+  const { firstName, lastName, phoneNumber } = req.body;
 
   try {
-    const user = await User.findByIdAndUpdate({_id: userId}, {firstName, lastName, phoneNumber, owner}, {new: true});
+    const user = await User.findById(userId);
 
-    if(!user) return next(createError(400));
+    if(!user) return next(createError(404));
     else {
+      const userUpdated = await User.findByIdAndUpdate({_id: userId}, {firstName, lastName, phoneNumber}, {new: true});
+
       user.password = "*";
       req.session.currentUser = user;
 
       res
-        .status(201)
-        .json(user);
+      .status(201)
+      .json(userUpdated);
     }
   } catch (error) {
     next(createError(error));
@@ -37,11 +40,17 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
 
   try {
-    await User.deleteOne({_id: userId});
+    const user = await User.findById(userId);
 
-    res
-      .status(200)
-      .send();
+    if (!user) return next(createError(404));
+    else {
+      await User.deleteOne({_id: userId});
+
+      res
+        .status(200)
+        .send();
+    }
+
   } catch (error) {
     next(createError(error));
   }
@@ -54,7 +63,7 @@ router.get('/:userId', isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
-    if (!user) return next(createError(400));
+    if (!user) return next(createError(404));
     else {
       user.password = "*";
       req.session.currentUser = user;
