@@ -1,7 +1,7 @@
 # VeBorrow App
 
 ## Description
-Imagine that you are in the city and need to go somewhere, but you don’t want to pay the expensive price for metro/bus tickets, or you don’t have any account to rent the public bikes… If this happens to you, VeBorrow is your solution!
+Imagine that you are in the city and need to go somewhere, but you don’t want to pay the expensive price for underground/bus tickets, or you don’t have any account to rent the public bikes… If this happens to you, VeBorrow is your solution!
 VeBorrow is an app where the users can borrow the vehicles (bikes, electric scooters, cars, motorcycle..) from other users, without paying any cost.
 Also, you can borrow your vehicle to other users that are in the same situation as you.
 
@@ -149,15 +149,16 @@ Let’s make this world more easy and friendly =)
 | GET         | `/auth/me    `          | Saved session                | 200            | 404          | Check if user is logged in and return home page    |
 | POST        | `/auth/signup`          | {firstName, lastName, email, password, phoneNumber}      | 201            | 404          | Checks if fields not empty (422) and user not exists (409), then create user with encrypted password, and store user in session |
 | POST        | `/auth/login`           | {email, password}            | 200            | 401          | Checks if fields not empty (422), if user exists (404), and if password matches (404), then stores user in session |
-| POST        | `/auth/logout`          | (empty)                      | 204            | 400          | Logs out the user                                          |
-| GET         | `/user/:userId`         | {userId}                 | 200            | 400          | Get user information                                   |
-| PUT         | `/user/:userId`         | {vehicleId, firstName, lastName,phoneNumber}           | 200          | 400          | edit user                           |
-| GET         | `/vehicles`             |                              | 200            | 404          | show user vehicles                                        |
-| GET         | `/vehicles/:vehicleId`  | {vehicleId}                  | 200            | 404          | show specific vehicle                                     |
-| POST        | `/vechicles`            | {type,ownerId}               | 200            | 404          | create new vehicle                                        |
-| PUT         | `/vehicles/:vehicleId`  | {vehicleId, latitude, longitude} | 201         | 400          | edit a specific vehicle                                   |
-| DELETE      | `/vehicle/:vehicleId`   | {vehicleId}                  | 200            | 400          | delete specific vehicle                                   |
-| GET         | `/borrow/:userId`      | {userId}                     | 201            | 400          | show user borrow list                                         |
+| POST        | `/auth/logout`          | (empty)                      | 204            | 400          | Logs out the user                     |
+| GET         | `/user/:userId`         | {userId}                     | 200            | 400          | Get user information                  |
+| PUT         | `/user/:userId`         | {firstName, lastName, phoneNumber}           | 201          | 400          | edit user     |
+| DELETE      | `/user/:userId`         |                              | 200            | 400          | delete user                           |
+| GET         | `/vehicles`             |                              | 200            | 404          | show user vehicles                     |
+| GET         | `/vehicles/:vehicleId`  | {vehicleId}                  | 200            | 404          | show specific vehicle                  |
+| POST        | `/vechicles`            | {type,ownerId}               | 200            | 404          | create new vehicle                     |
+| PUT         | `/vehicles/:vehicleId`  | {vehicleId, latitude, longitude} | 201         | 400          | edit a specific vehicle               |
+| DELETE      | `/vehicle/:vehicleId`   | {vehicleId}                  | 200            | 400          | delete specific vehicle                |
+| GET         | `/borrow/:userId`      | {userId}                     | 200            | 400          | show user borrow list                   |
 
 <br>
 
