@@ -35,4 +35,26 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
+// GET /borrow
+router.get('/', isLoggedIn, async (req, res, next) => {
+  const userId = req.session.currentUser._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return next(createError(404));
+    else {
+      const borrowListAsOwner = await Borrow.find({ownerId: userId});
+      const borrowListAsRenter = await Borrow.find({renterId: userId});
+
+      const borrowList = borrowListAsOwner.concat(borrowListAsRenter);
+
+      res
+        .status(200)
+        .json(borrowList);
+    }
+  } catch (error) {
+    next(createError(error))
+  }
+})
+
 module.exports = router;
