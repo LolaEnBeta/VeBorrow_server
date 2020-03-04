@@ -12,6 +12,7 @@ require('dotenv').config();
 const auth = require('./routes/auth');
 const user = require('./routes/user');
 const vehicle = require('./routes/vehicle');
+const borrow = require('./routes/borrow');
 
 
 // MONGOOSE CONNECTION
@@ -65,6 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/auth', auth);
 app.use('/user', user);
 app.use('/vehicles', vehicle);
+app.use('/borrow', borrow);
 
 
 // 404 
