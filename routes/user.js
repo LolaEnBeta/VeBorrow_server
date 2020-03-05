@@ -46,6 +46,14 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
     else {
       await User.deleteOne({_id: userId});
 
+      req.session.destroy(err => {
+        if (err) {
+          res.redirect("/");
+        } else {
+          res.redirect("/signup");
+        }
+      });
+
       res
         .status(200)
         .send();
