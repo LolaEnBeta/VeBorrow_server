@@ -38,7 +38,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
-// PUT /vehicle/:vehicleId
+// PUT /vehicles/:vehicleId
 router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
   const { latitude, longitude, available } = req.body;
@@ -58,7 +58,7 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
   }
 })
 
-// DELETE /vehicle/:vehicleId
+// DELETE /vehicles/:vehicleId
 router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
 
@@ -99,11 +99,12 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
 router.get('/', isLoggedIn, async (req, res, next) => {
 
   try {
-    const vehiclesList = await Vehicle.find();
+    const userId = req.session.currentUser._id;
 
+    const userVehicles = await Vehicle.find({ownerId: userId});
     res
       .status(200)
-      .json(vehiclesList);
+      .json(userVehicles);
   } catch (error) {
     next(createError(error));
   }
