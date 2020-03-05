@@ -61,12 +61,18 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
 // DELETE /vehicles/:vehicleId
 router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
+  const userId = req.session.currentUser._id
 
   try {
     const vehicle = await Vehicle.findById(vehicleId);
 
     if (!vehicle) return next(createError(404));
     else {
+      const user = await User.findById(userId);
+
+      user.vehicles.splice(user.vehicles.indexOf(vehicle._id), 1);
+      await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles}, {new: true});
+
       await Vehicle.findByIdAndDelete(vehicleId);
 
       res
