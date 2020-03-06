@@ -25,7 +25,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 
     user.vehicles.push(vehicle._id);
 
-    const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: true}, {new: true});
+    const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: true}, {new: true}).populate('vehicles');
 
     updatedUser.password = "*";
     req.session.currentUser = updatedUser;
@@ -71,9 +71,12 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
       const user = await User.findById(userId);
 
       user.vehicles.splice(user.vehicles.indexOf(vehicle._id), 1);
-      await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles}, {new: true});
+      const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles}, {new: true}).populate('vehicles');
 
       await Vehicle.findByIdAndDelete(vehicleId);
+
+      updatedUser.password = "*";
+      req.session.currentUser = updatedUser;
 
       res
         .status(200)
