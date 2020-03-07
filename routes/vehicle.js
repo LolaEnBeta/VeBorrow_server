@@ -71,7 +71,10 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
       const user = await User.findById(userId);
 
       user.vehicles.splice(user.vehicles.indexOf(vehicle._id), 1);
-      const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles}, {new: true}).populate('vehicles');
+
+      if (user.vehicles.length === 0) user.owner = false;
+
+      const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: user.owner}, {new: true}).populate('vehicles');
 
       await Vehicle.findByIdAndDelete(vehicleId);
 
