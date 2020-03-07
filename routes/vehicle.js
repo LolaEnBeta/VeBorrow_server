@@ -90,7 +90,20 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
   }
 })
 
-// GET /vehicles
+// GET /vehicles/available
+router.get('/available', isLoggedIn, async (req, res, next) => {
+
+  try {
+    const useravailableVehicles = await Vehicle.find({available: true});
+    res
+      .status(200)
+      .json(useravailableVehicles);
+  } catch (error) {
+    next(createError(error));
+  }
+});
+
+// GET /vehicles/:vehicleId
 router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
 
