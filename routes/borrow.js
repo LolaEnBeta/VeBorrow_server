@@ -26,6 +26,12 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     else {
       const borrow = await Borrow.create({ownerId, renterId, vehicleId, message});
 
+      owner.borrowList.push(borrow._id);
+      renter.borrowList.push(borrow._id);
+
+      await User.findByIdAndUpdate({_id: owner._id}, {borrowList: owner.borrowList}, {new: true});
+      await User.findByIdAndUpdate({_id: renter._id}, {borrowList: renter.borrowList}, {new: true});
+
       res
         .status(200)
         .json(borrow);
