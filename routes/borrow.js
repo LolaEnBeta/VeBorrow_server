@@ -41,8 +41,28 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   }
 });
 
-// PUT /borrow/:borrowId
-router.put('/:borrowId', isLoggedIn, async (req, res, next) => {
+// PUT /borrow/accepted/:borrowId
+router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
+  const { borrowId } = req.params;
+
+  try {
+    const borrow = await Borrow.findById(borrowId);
+
+    if (!borrow) return next(createError(404));
+    else {
+      const borrowAccepted = await Borrow.findByIdAndUpdate({_id: borrowId}, {accepted: true}, {new: true});
+
+      res
+        .status(201)
+        .json(borrowAccepted);
+    }
+  } catch (error) {
+    next(createError(error));
+  }
+});
+
+// PUT /borrow/completed/:borrowId
+router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
   const { borrowId } = req.params;
 
   try {
@@ -59,7 +79,7 @@ router.put('/:borrowId', isLoggedIn, async (req, res, next) => {
   } catch (error) {
     next(createError(error));
   }
-})
+});
 
 // GET /borrow
 router.get('/', isLoggedIn, async (req, res, next) => {
@@ -81,6 +101,6 @@ router.get('/', isLoggedIn, async (req, res, next) => {
   } catch (error) {
     next(createError(error))
   }
-})
+});
 
 module.exports = router;
