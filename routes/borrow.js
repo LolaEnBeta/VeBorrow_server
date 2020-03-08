@@ -61,6 +61,27 @@ router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
   }
 });
 
+
+// PUT /borrow/rejected/:borrowId
+router.put('/rejected/:borrowId', isLoggedIn, async (req, res, next) => {
+  const { borrowId } = req.params;
+
+  try {
+    const borrow = await Borrow.findById(borrowId);
+
+    if (!borrow) return next(createError(404));
+    else {
+      const borrowRejected = await Borrow.findByIdAndUpdate({_id: borrowId}, {rejected: true}, {new: true});
+
+      res
+        .status(201)
+        .json(borrowRejected);
+    }
+  } catch (error) {
+    next(createError(error));
+  }
+});
+
 // PUT /borrow/completed/:borrowId
 router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
   const { borrowId } = req.params;
