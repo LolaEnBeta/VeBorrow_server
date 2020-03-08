@@ -108,7 +108,7 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
 
   try {
-    const vehicle = await Vehicle.findById(vehicleId);
+    const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
     if (!vehicle) return next(createError(404));
     else {
       res

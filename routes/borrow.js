@@ -69,8 +69,8 @@ router.get('/', isLoggedIn, async (req, res, next) => {
     const user = await User.findById(userId);
     if (!user) return next(createError(404));
     else {
-      const borrowListAsOwner = await Borrow.find({ownerId: userId});
-      const borrowListAsRenter = await Borrow.find({renterId: userId});
+      const borrowListAsOwner = await Borrow.find({ownerId: userId}).populate('vehicleId ownerId renterId');
+      const borrowListAsRenter = await Borrow.find({renterId: userId}).populate('vehicleId ownerId renterId');
 
       const borrowList = borrowListAsOwner.concat(borrowListAsRenter);
 
