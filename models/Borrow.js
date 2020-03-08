@@ -6,7 +6,10 @@ const borrowSchema = new Schema({
   renterId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
   vehicleId: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"},
   message: {type: String},
-  completed: {type: Boolean, default: false}
+  accepted: {type: Boolean, default: false},
+  rejected: {type: Boolean, default: false},
+  completed: {type: Boolean, default: false},
+
 }, {
   timestamps: {
     createdAt: 'created_at',
