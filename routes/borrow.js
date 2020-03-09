@@ -44,6 +44,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 // PUT /borrow/accepted/:borrowId
 router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
   const { borrowId } = req.params;
+  const { vehicleId } = req.body;
 
   try {
     const borrow = await Borrow.findById(borrowId);
@@ -51,6 +52,7 @@ router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
     if (!borrow) return next(createError(404));
     else {
       const borrowAccepted = await Borrow.findByIdAndUpdate({_id: borrowId}, {accepted: true}, {new: true});
+      await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: true}, {new: true});
 
       res
         .status(201)
@@ -85,6 +87,7 @@ router.put('/rejected/:borrowId', isLoggedIn, async (req, res, next) => {
 // PUT /borrow/completed/:borrowId
 router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
   const { borrowId } = req.params;
+  const { vehicleId } = req.body;
 
   try {
     const borrow = await Borrow.findById(borrowId);
@@ -92,6 +95,7 @@ router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
     if (!borrow) return next(createError(404));
     else {
       const borrowCompleted = await Borrow.findByIdAndUpdate({_id: borrowId}, {completed: true}, {new: true});
+      await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: false}, {new: true});
 
       res
         .status(201)
