@@ -34,7 +34,10 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: [process.env.PUBLIC_DOMAIN],
+    origin: [
+      process.env.PUBLIC_DOMAIN,
+      "https://ve-borrow.herokuapp.com"
+    ],
   }),
 );
 
@@ -68,6 +71,11 @@ app.use('/user', user);
 app.use('/vehicles', vehicle);
 app.use('/borrow', borrow);
 
+// ROUTE FOR SERVING REACT APP (index.html)
+app.use((req, res, next) => {
+  // If no routes match, send them the React HTML.
+  res.sendFile(__dirname + "/public/index.html");
+});
 
 // 404 
 // catch 404 and forward to error handler
