@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const vehicleSchema = new Schema({
-  type: {type: String, required: true, enum: ["bike", "motorcycle", "car", "scooter", "electric scooter"]},
+  type: {type: String, required: true, enum: ["Bike", "Motorcycle", "Car", "Scooter", "Electric scooter"]},
   ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
   latitude: {type: String, default: null},
   longitude: {type: String, default: null},
