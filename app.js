@@ -8,11 +8,13 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors');
 require('dotenv').config();
+const webpush = require('web-push');
 
 const auth = require('./routes/auth');
 const user = require('./routes/user');
 const vehicle = require('./routes/vehicle');
 const borrow = require('./routes/borrow');
+const subscribe = require('./routes/subscribe');
 
 
 // MONGOOSE CONNECTION
@@ -70,6 +72,7 @@ app.use('/auth', auth);
 app.use('/user', user);
 app.use('/vehicles', vehicle);
 app.use('/borrow', borrow);
+app.use('/subscribe', subscribe);
 
 // ROUTE FOR SERVING REACT APP (index.html)
 app.use((req, res, next) => {
