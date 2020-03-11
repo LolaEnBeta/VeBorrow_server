@@ -9,7 +9,6 @@ const borrowSchema = new Schema({
   accepted: {type: Boolean, default: false},
   rejected: {type: Boolean, default: false},
   completed: {type: Boolean, default: false},
-
 }, {
   timestamps: {
     createdAt: 'created_at',

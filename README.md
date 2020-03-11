@@ -42,12 +42,10 @@ Let’s make this world more easy and friendly =)
 | `/login`                        | LoginPage         | anon only       | Login form, link to signup, navigate to home directory after login  |
 | `/logout`                       | n/a               | anon only       | Navigate to public login page after logout, expire session          |
 | `/search`                       | SearchVehicle     | user            | Show Map with all the vehicles ready for borrow                     |
-| `/search/:vehicleId`            | VehicleDetailsPage  | user          | Show details of the vehicle available to borrow                     |
 | `/my-vehicles`                  | VehiclesPage      | user            | Show a list of all the vehicles                                     |
-| `/my-vehicles/:vehicleId`       | VehicleProfilePage  | user          | Show details of one vehicle                                         |
 | `/notifications`                | NotificationsPage | user            | Show a list of all the vehicles                                     |
-| `/borrow/:borrowId`             | Borrow            | user            | Show details of the borrow                                          |
 | `/my-profile`                   | ProfilePage       | user            | Show details of the user profile                                    |
+| `/edit-profile`                   | EditProfileFormPage       | user            | Show a form to modify the user information           |
 
 
 <br>
@@ -58,13 +56,14 @@ Let’s make this world more easy and friendly =)
 - SignupPage
 - LoginPage
 - SearchVehicle
-- Vehicle
 - VehiclesPage
 - NotificationsPage
-- Notification
-- Borrow
 - Navbar
 - ProfilePage
+- MapContainer
+- BorrowCard
+- IsOwneNotification
+- IsRenterNotification
 - 404Page
 
 <br>
@@ -78,20 +77,27 @@ Let’s make this world more easy and friendly =)
   - auth.me()
 
 - User Service
-  - user.getOne(id)
-  - user.getOneAndUpdate(id, body)
+  - user.getUser(id)
+  - user.deleteUser(id)
+  - user.updateUser(id, firstName, lastName, phoneNumber)
 
 - Vehicle Service
-  - vehicle.getAll()
+  - vehicle.getAllVehicles()
+  - vehicle.getAllAvailableVehicles()
+  - vehicle.createVehicle(type)
+  - vehicle.deleteOneVehicle(id)
+  - vehicle.updateVehicle(id, available, latitude, longitude)
   - vehicle.getOne(id)
-  - vehicle.getOneAndUpdate(id, body)
-  - vehicle.create(body)
-  - vehicle.delete(id)
 
 - Borrow Service
-  - borrow.create(body)
-  - borrow.getOne(id)
-  - borrow.getOneAndUpdate(id, body)
+  - borrow.create(ownerId, vehicleId, message)
+  - borrow.get()
+  - borrow.returnVehicle(borrowId, vehicleId, latitude, longitude)
+  - borrow.acceptBorrow(borrowId, vehicleId)
+  - borrow.rejectBorrow(borrowId)
+
+- Notificaction Service
+  - generate(userId)
 
   <br>
   <br>
@@ -111,7 +117,8 @@ Let’s make this world more easy and friendly =)
     password: {type: String, required: true},
     owner: {type: Boolean, default: false},
     vehicles: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"}],
-    borrowList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Borrow"}]
+    borrowList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Borrow"}],
+    subscription: {type: Object}
   }
   ```
 
@@ -120,11 +127,12 @@ Let’s make this world more easy and friendly =)
 
   ```javascript
   {
-    type: {type: String, required: true, enum: ["bike", "motorcycle", "car", "scooter", "electric scooter"]},
-    ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-    latitude: {type: String},
-    longitude: {type: String},
-    available: {type: Boolean}
+    type: {type: String, required: true, enum: ["Bike", "Motorcycle", "Car", "Scooter", "Electric scooter"]},
+    ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    latitude: {type: String, default: null},
+    longitude: {type: String, default: null},
+    available: {type: Boolean, default: false},
+    inUse: {type: Boolean, default: false}
   }
   ```
 
@@ -133,10 +141,13 @@ Let’s make this world more easy and friendly =)
 
   ```javascript
   {
-    ownerId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-    renterId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}],
-    vehicleId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"}],
+    ownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    renterId: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    vehicleId: { type: mongoose.Schema.Types.ObjectId, ref: "Vehicle"},
     message: {type: String},
+    accepted: {type: Boolean, default: false},
+    rejected: {type: Boolean, default: false},
+    completed: {type: Boolean, default: false},
   }
   ```
 
@@ -158,9 +169,13 @@ Let’s make this world more easy and friendly =)
 | POST        | `/vechicles`            | {type,ownerId}               | 200            | 404          | create new vehicle                     |
 | PUT         | `/vehicles/:vehicleId`  | {vehicleId, latitude, longitude} | 201         | 400          | edit a specific vehicle               |
 | DELETE      | `/vehicle/:vehicleId`   | {vehicleId}                  | 200            | 400          | delete specific vehicle                |
+| GET      | `/vehicle/available`   |                   | 200            | 400          | Get only the available vehicles                |
 | POST        | `/borrow`               | {ownerId, renterId, vehicleId, message}       | 200            | 400          | create a borrow "contract"           |
+| PUT        | `/borrow/accepted/:borrowId` | {vehicleId}       | 201            | 400          | Update the state of the borrow to accepted true        |
+| PUT        | `/borrow/rejected/:borrowId` | {vehicleId}       | 201            | 400          | Update the state of the borrow to rejected true        |
+| PUT        | `/borrow/completed/:borrowId` | {vehicleId}       | 201            | 400          | Update the state of the borrow to completed true        |
 | GET         | `/borrow`              |                              | 200            | 400          | show user borrow list                   |
-| PUT         | `/borrow/:borrowId`    |  {completed}                 | 200            | 400          | modify a specific borrow                |
+| POST         | `/subscribe`    |  {subscription}                 | 201            | 400          | Save in the user the subscription of web-push notifications                |
 
 <br>
 
@@ -170,12 +185,12 @@ Let’s make this world more easy and friendly =)
 [Trello board Link](https://trello.com/b/oL9dar4Q/veborrow-final-project)
 
 ## Git
-[Client repository Link]()
+[Client repository Link](https://github.com/LolaEnBeta/VeBorrow_client)
 [Server repository Link](https://github.com/LolaEnBeta/VeBorrow_server)
 [Deploy Link]()
 
 ## Slides
 
-[Slides Link]()
+[Slides Link](https://docs.google.com/presentation/d/1sSamG3yreYOO49jIdP0HRbONaeI-yyBFhn2EEqsKaEE/edit)
 
 
