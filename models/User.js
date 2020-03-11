@@ -9,7 +9,8 @@ const userSchema = new Schema({
   password: {type: String, required: true},
   owner: {type: Boolean,default: false},
   vehicles: [{type: Schema.Types.ObjectId, ref: "Vehicle"}],
-  borrowList: [{type: Schema.Types.ObjectId, ref: "Borrow"}]
+  borrowList: [{type: Schema.Types.ObjectId, ref: "Borrow"}],
+  subscription: {type: Object}
 }, {
   timestamps: {
     createdAt: 'created_at',
