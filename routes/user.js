@@ -49,7 +49,7 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
       req.session.destroy();
 
       res
-        .status(200)
+        .status(204)
         .send();
     }
 
