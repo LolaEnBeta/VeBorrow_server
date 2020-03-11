@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
+const webpush = require('web-push');
 
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
@@ -53,6 +54,14 @@ router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
     else {
       const borrowAccepted = await Borrow.findByIdAndUpdate({_id: borrowId}, {accepted: true}, {new: true});
       await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: true, available: false}, {new: true});
+
+      let renterUser = await User.findById(borrowAccepted.renterId)
+      const payload = JSON.stringify({ title: 'Your borrow is accepted! Enjoy it =)' });
+
+      //Pass object into sendNotification
+      webpush.sendNotification(renterUser.subscription, payload).catch(error => {
+        console.error(error);
+      });
 
       res
         .status(201)
