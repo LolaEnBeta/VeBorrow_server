@@ -113,6 +113,13 @@ router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
       const borrowCompleted = await Borrow.findByIdAndUpdate({_id: borrowId}, {completed: true, latitude, longitude}, {new: true});
       await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: false, available: true}, {new: true});
 
+      let user = await User.findById(borrowCompleted.ownerId)
+      const payload = JSON.stringify({ title: 'Your vehicle has been returned! Thanks for sharing it! =)' });
+
+      //Pass object into sendNotification
+      webpush.sendNotification(user.subscription, payload).catch(error => {
+        console.error(error);
+      });
       res
         .status(201)
         .json(borrowCompleted);
