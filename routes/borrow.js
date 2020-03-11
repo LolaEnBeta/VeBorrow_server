@@ -84,6 +84,13 @@ router.put('/rejected/:borrowId', isLoggedIn, async (req, res, next) => {
     else {
       const borrowRejected = await Borrow.findByIdAndUpdate({_id: borrowId}, {rejected: true}, {new: true});
 
+      let renterUser = await User.findById(borrowRejected.renterId)
+      const payload = JSON.stringify({ title: 'Your borrow is rejected! >.<   Try another one...' });
+
+      //Pass object into sendNotification
+      webpush.sendNotification(renterUser.subscription, payload).catch(error => {
+        console.error(error);
+      });
       res
         .status(201)
         .json(borrowRejected);
