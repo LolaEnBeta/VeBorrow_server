@@ -33,6 +33,14 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       await User.findByIdAndUpdate({_id: owner._id}, {borrowList: owner.borrowList}, {new: true});
       await User.findByIdAndUpdate({_id: renter._id}, {borrowList: renter.borrowList}, {new: true});
 
+      let user = await User.findById(borrow.ownerId)
+      const payload = JSON.stringify({ title: 'You have a new request to borrow your vehicle =)' });
+
+      //Pass object into sendNotification
+      webpush.sendNotification(user.subscription, payload).catch(error => {
+        console.error(error);
+      });
+
       res
         .status(200)
         .json(borrow);

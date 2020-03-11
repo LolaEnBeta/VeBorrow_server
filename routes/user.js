@@ -12,7 +12,7 @@ const {
 } = require("../helpers/middlewares");
 
 // PUT /user/:userId
-router.post('/:userId', isLoggedIn, async (req, res, next) => {
+router.put('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
   const { firstName, lastName, phoneNumber } = req.body;
 
@@ -23,8 +23,8 @@ router.post('/:userId', isLoggedIn, async (req, res, next) => {
     else {
       const userUpdated = await User.findByIdAndUpdate({_id: userId}, {firstName, lastName, phoneNumber}, {new: true}).populate('vehicles');
 
-      user.password = "*";
-      req.session.currentUser = user;
+      userUpdated.password = "*";
+      req.session.currentUser = userUpdated;
 
       res
       .status(201)
@@ -69,7 +69,7 @@ router.get('/:userId', isLoggedIn, async (req, res, next) => {
     else {
       user.password = "*";
       req.session.currentUser = user;
-
+      
       res
         .status(200)
         .json(user);
