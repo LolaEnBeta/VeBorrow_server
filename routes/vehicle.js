@@ -5,7 +5,11 @@ const createError = require("http-errors");
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
 
-const {getAllVehicles, getVehicleById} = require("../use-cases/vehicles.use-case");
+const {
+  getAllVehicles,
+  getVehicleById,
+  getAllVehiclesAvailables
+} = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
 const {
@@ -96,7 +100,7 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
 router.get('/available', isLoggedIn, async (req, res, next) => {
 
   try {
-    const useravailableVehicles = await Vehicle.find({available: true});
+    const useravailableVehicles = await getAllVehiclesAvailables();
     res
       .status(200)
       .json(useravailableVehicles);

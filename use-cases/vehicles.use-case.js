@@ -11,4 +11,9 @@ const getVehicleById = async (vehicleId) => {
   return vehicle;
 }
 
-module.exports = {getAllVehicles, getVehicleById};
+const getAllVehiclesAvailables = async () => {
+  const useravailableVehicles = await Vehicle.find({available: true});
+  return useravailableVehicles;
+}
+
+module.exports = {getAllVehicles, getVehicleById, getAllVehiclesAvailables};
