@@ -6,4 +6,9 @@ const getAllVehicles = async (userId) => {
   return userVehicles;
 }
 
-module.exports = getAllVehicles;
+const getVehicleById = async (vehicleId) => {
+  const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
+  return vehicle;
+}
+
+module.exports = {getAllVehicles, getVehicleById};

@@ -5,7 +5,7 @@ const createError = require("http-errors");
 const User = require("../models/User");
 const Vehicle = require("../models/Vehicle");
 
-const getAllVehicles = require("../use-cases/vehicles.use-case");
+const {getAllVehicles, getVehicleById} = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
 const {
@@ -110,13 +110,11 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { vehicleId } = req.params;
 
   try {
-    const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
-    if (!vehicle) return next(createError(404));
-    else {
-      res
-        .status(200)
-        .json(vehicle);
-    }
+    const vehicle = await getVehicleById(vehicleId);
+
+    res
+      .status(200)
+      .json(vehicle);
   } catch (error) {
     next(createError(error));
   }
