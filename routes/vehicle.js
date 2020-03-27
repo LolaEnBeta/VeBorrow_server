@@ -8,7 +8,8 @@ const Vehicle = require("../models/Vehicle");
 const {
   getAllVehicles,
   getVehicleById,
-  getAllVehiclesAvailables
+  getAllVehiclesAvailables,
+  updateVehicle,
 } = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
@@ -50,15 +51,10 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const { latitude, longitude, available } = req.body;
 
   try {
-    const vehicle = await Vehicle.findById(vehicleId);
-    if(!vehicle) return next(createError(404));
-    else {
-      const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id}, {latitude, longitude, available}, {new: true});
-
-      res
-        .status(201)
-        .json(vehicleUpdated);
-    }
+    const vehicleUpdated = await updateVehicle(vehicleId, latitude, longitude, available);
+    res
+      .status(201)
+      .json(vehicleUpdated);
   } catch (error) {
     next(createError(error));
   }
@@ -82,14 +78,14 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
 
       const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: user.owner}, {new: true}).populate('vehicles');
 
-      await Vehicle.findByIdAndDelete(vehicleId);
+      const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
 
       updatedUser.password = "*";
       req.session.currentUser = updatedUser;
 
       res
         .status(200)
-        .send();
+        .json(deletedVehicle);
     }
   } catch (error) {
     next(createError(error));

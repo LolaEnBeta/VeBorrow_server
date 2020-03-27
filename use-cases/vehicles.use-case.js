@@ -16,4 +16,14 @@ const getAllVehiclesAvailables = async () => {
   return useravailableVehicles;
 }
 
-module.exports = {getAllVehicles, getVehicleById, getAllVehiclesAvailables};
+const updateVehicle = async (vehicleId, latitude, longitude, available) => {
+  const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicleId}, {latitude, longitude, available}, {new: true});
+  return vehicleUpdated;
+}
+
+module.exports = {
+  getAllVehicles,
+  getVehicleById,
+  getAllVehiclesAvailables,
+  updateVehicle
+};
