@@ -25,10 +25,21 @@ const createOneVehicle = async (type, ownerId) => {
   return vehicle;
 }
 
+const updateOneVehicle = async (vehicle) => {
+  const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id},
+    {
+      latitude: vehicle.latitude,
+      longitude: vehicle.longitude,
+      available: vehicle.available
+    }, {new: true});
+  return vehicleUpdated;
+}
+
 module.exports = {
   getUserVehicles,
   getOneVehicle,
   getAllTheAvailables,
   deleteOneVehicle,
   createOneVehicle,
+  updateOneVehicle,
 }

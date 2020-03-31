@@ -12,6 +12,7 @@ const {
   getAllTheAvailables,
   deleteOneVehicle,
   createOneVehicle,
+  updateOneVehicle,
 } = require("../repository/vehicleRepository");
 
 const getAllVehicles = async (userId) => {
@@ -31,7 +32,13 @@ const getAllVehiclesAvailables = async () => {
 }
 
 const updateVehicle = async (vehicleId, latitude, longitude, available) => {
-  const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicleId}, {latitude, longitude, available}, {new: true});
+  const vehicle = await getOneVehicle(vehicleId);
+
+  vehicle.latitude = latitude;
+  vehicle.longitude = longitude;
+  vehicle.available = available;
+
+  const vehicleUpdated = await updateOneVehicle(vehicle);
   return vehicleUpdated;
 }
 
