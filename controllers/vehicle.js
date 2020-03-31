@@ -10,6 +10,7 @@ const {
   getVehicleById,
   getAllVehiclesAvailables,
   updateVehicle,
+  deleteVehicle,
 } = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
@@ -66,27 +67,10 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
   const userId = req.session.currentUser._id
 
   try {
-    const vehicle = await Vehicle.findById(vehicleId);
-
-    if (!vehicle) return next(createError(404));
-    else {
-      const user = await User.findById(userId);
-
-      user.vehicles.splice(user.vehicles.indexOf(vehicle._id), 1);
-
-      if (user.vehicles.length === 0) user.owner = false;
-
-      const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: user.owner}, {new: true}).populate('vehicles');
-
-      const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
-
-      updatedUser.password = "*";
-      req.session.currentUser = updatedUser;
-
-      res
-        .status(200)
-        .json(deletedVehicle);
-    }
+    const deletedVehicle = await deleteVehicle(vehicleId, userId);
+    res
+      .status(200)
+      .json(deletedVehicle);
   } catch (error) {
     next(createError(error));
   }

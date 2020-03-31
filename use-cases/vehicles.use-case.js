@@ -1,4 +1,5 @@
 const Vehicle = require("../models/Vehicle");
+const User = require("../models/User");
 
 const getAllVehicles = async (userId) => {
   const userVehicles = await Vehicle.find({ownerId: userId});
@@ -21,9 +22,26 @@ const updateVehicle = async (vehicleId, latitude, longitude, available) => {
   return vehicleUpdated;
 }
 
+const deleteVehicle = async (vehicleId, userId) => {
+  const user = await User.findById(userId);
+
+  const vehicleIndex = user.vehicles.indexOf(vehicleId);
+
+  user.vehicles.splice(vehicleIndex, 1);
+
+  if (user.vehicles.length === 0) user.owner = false;
+
+  await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: user.owner}, {new: true}).populate('vehicles');
+
+  const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
+
+  return deletedVehicle;
+}
+
 module.exports = {
   getAllVehicles,
   getVehicleById,
   getAllVehiclesAvailables,
-  updateVehicle
+  updateVehicle,
+  deleteVehicle,
 };
