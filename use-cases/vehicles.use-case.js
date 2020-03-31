@@ -1,81 +1,62 @@
-const Vehicle = require("../models/Vehicle");
-const User = require("../models/User");
+const userRepository = require("../repository/userRepository");
+const vehicleRepository = require("../repository/vehicleRepository");
 
-const {
-  getUser,
-  updateUserVehicles,
-} = require("../repository/userRepository");
+class VehicleUseCase {
+  async getAllVehicles(userId) {
+    const userVehicles = await vehicleRepository.getUserVehicles(userId);
 
-const {
-  getUserVehicles,
-  getOneVehicle,
-  getAllTheAvailables,
-  deleteOneVehicle,
-  createOneVehicle,
-  updateOneVehicle,
-} = require("../repository/vehicleRepository");
+    return userVehicles;
+  }
 
-const getAllVehicles = async (userId) => {
-  const userVehicles = await getUserVehicles(userId);
+  async getVehicleById(vehicleId) {
+    const vehicle = await vehicleRepository.getOneVehicle(vehicleId);
+    return vehicle;
+  }
 
-  return userVehicles;
+  async getAllVehiclesAvailables() {
+    const useravailableVehicles = await vehicleRepository.getAllTheAvailables();
+    return useravailableVehicles;
+  }
+
+  async updateVehicle(vehicleId, latitude, longitude, available) {
+    const vehicle = await vehicleRepository.getOneVehicle(vehicleId);
+
+    vehicle.latitude = latitude;
+    vehicle.longitude = longitude;
+    vehicle.available = available;
+
+    const vehicleUpdated = await vehicleRepository.updateOneVehicle(vehicle);
+    return vehicleUpdated;
+  }
+
+  async deleteVehicle(vehicleId, userId) {
+    const user = await userRepository.getUser(userId);
+
+    const vehicleIndex = user.vehicles.indexOf(vehicleId);
+
+    user.vehicles.splice(vehicleIndex, 1);
+
+    if (user.vehicles.length === 0) user.owner = false;
+
+    await userRepository.updateUserVehicles(user);
+
+    const deletedVehicle = await vehicleRepository.deleteOneVehicle(vehicleId);
+
+    return deletedVehicle;
+  }
+
+  async createVehicle(type, ownerId) {
+    const vehicle = await vehicleRepository.createOneVehicle(type, ownerId);
+
+    const user = await userRepository.getUser(ownerId);
+
+    user.vehicles.push(vehicle._id);
+    user.owner = true;
+
+    await userRepository.updateUserVehicles(user);
+
+    return vehicle;
+  }
 }
 
-const getVehicleById = async (vehicleId) => {
-  const vehicle = await getOneVehicle(vehicleId);
-  return vehicle;
-}
-
-const getAllVehiclesAvailables = async () => {
-  const useravailableVehicles = await getAllTheAvailables();
-  return useravailableVehicles;
-}
-
-const updateVehicle = async (vehicleId, latitude, longitude, available) => {
-  const vehicle = await getOneVehicle(vehicleId);
-
-  vehicle.latitude = latitude;
-  vehicle.longitude = longitude;
-  vehicle.available = available;
-
-  const vehicleUpdated = await updateOneVehicle(vehicle);
-  return vehicleUpdated;
-}
-
-const deleteVehicle = async (vehicleId, userId) => {
-  const user = await getUser(userId);
-
-  const vehicleIndex = user.vehicles.indexOf(vehicleId);
-
-  user.vehicles.splice(vehicleIndex, 1);
-
-  if (user.vehicles.length === 0) user.owner = false;
-
-  await updateUserVehicles(user);
-
-  const deletedVehicle = await deleteOneVehicle(vehicleId);
-
-  return deletedVehicle;
-}
-
-const createVehicle = async (type, ownerId) => {
-  const vehicle = await createOneVehicle(type, ownerId);
-
-  const user = await getUser(ownerId);
-
-  user.vehicles.push(vehicle._id);
-  user.owner = true;
-
-  await updateUserVehicles(user);
-
-  return vehicle;
-}
-
-module.exports = {
-  getAllVehicles,
-  getVehicleById,
-  getAllVehiclesAvailables,
-  updateVehicle,
-  deleteVehicle,
-  createVehicle,
-};
+module.exports = new VehicleUseCase();

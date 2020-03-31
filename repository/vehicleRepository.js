@@ -1,45 +1,41 @@
 const Vehicle = require("../models/Vehicle");
 
-const getUserVehicles = async (userId) => {
-  const userVehicles = await Vehicle.find({ownerId: userId});
-  return userVehicles;
+class VehicleRepository {
+  async getUserVehicles(userId) {
+    const userVehicles = await Vehicle.find({ownerId: userId});
+    return userVehicles;
+  }
+
+  async getOneVehicle(vehicleId) {
+    const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
+    return vehicle;
+  }
+
+  async getAllTheAvailables() {
+    const availableVehicles = await Vehicle.find({available: true});
+    return availableVehicles;
+  }
+
+  async deleteOneVehicle(vehicleId) {
+    const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
+    return deletedVehicle;
+  }
+
+  async createOneVehicle(type, ownerId) {
+    const vehicle = await Vehicle.create({ type, ownerId });
+    return vehicle;
+  }
+
+  async updateOneVehicle(vehicle) {
+    const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id},
+      {
+        latitude: vehicle.latitude,
+        longitude: vehicle.longitude,
+        available: vehicle.available
+      }, {new: true});
+    return vehicleUpdated;
+  }
 }
 
-const getOneVehicle = async (vehicleId) => {
-  const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
-  return vehicle;
-}
 
-const getAllTheAvailables = async () => {
-  const availableVehicles = await Vehicle.find({available: true});
-  return availableVehicles;
-}
-
-const deleteOneVehicle = async (vehicleId) => {
-  const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
-  return deletedVehicle;
-}
-
-const createOneVehicle = async (type, ownerId) => {
-  const vehicle = await Vehicle.create({ type, ownerId });
-  return vehicle;
-}
-
-const updateOneVehicle = async (vehicle) => {
-  const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id},
-    {
-      latitude: vehicle.latitude,
-      longitude: vehicle.longitude,
-      available: vehicle.available
-    }, {new: true});
-  return vehicleUpdated;
-}
-
-module.exports = {
-  getUserVehicles,
-  getOneVehicle,
-  getAllTheAvailables,
-  deleteOneVehicle,
-  createOneVehicle,
-  updateOneVehicle,
-}
+module.exports = new VehicleRepository();
