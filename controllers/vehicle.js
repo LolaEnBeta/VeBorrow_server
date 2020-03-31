@@ -33,7 +33,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
       .status(201)
       .json(newVehicle);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -48,7 +48,7 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
       .status(201)
       .json(vehicleUpdated);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 })
 
@@ -63,7 +63,7 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
       .status(200)
       .json(deletedVehicle);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 })
 
@@ -76,7 +76,7 @@ router.get('/available', isLoggedIn, async (req, res, next) => {
       .status(200)
       .json(useravailableVehicles);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -91,7 +91,7 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
       .status(200)
       .json(vehicle);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 })
 
@@ -106,7 +106,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
       .status(200)
       .json(userVehicles);
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 

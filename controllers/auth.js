@@ -33,7 +33,7 @@ router.post('/signup', isNotLoggedIn, validationLogin, async (req, res, next) =>
     }
   }
   catch (error) {
-    next(createError(error));
+    createError(error);
   }
 },
 );
@@ -44,23 +44,21 @@ router.post('/login', isNotLoggedIn, validationLogin, async (req, res, next) => 
   try {
     const user = await User.findOne({ email }).populate("vehicles");
     if (!user) {
-      next(createError(404));
+      createError(404);
     }
     else if (bcrypt.compareSync(password, user.password)) {
-
       user.password = '*';
       req.session.currentUser = user;
       res
         .status(200)
         .json(user);
-    //return;	 			TODO - remove from the notes
     }
     else {
-      next(createError(401));	// Unauthorized
+      createError(401);	// Unauthorized
     }
   }
   catch (error) {
-    next(createError(error));
+    createError(error);
   }
 },
 );

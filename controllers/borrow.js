@@ -23,7 +23,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
     const renter = await User.findById(renterId);
     const vehicle = await Vehicle.findById(vehicleId);
 
-    if (!owner || !renter || !vehicle) return next(createError(404));
+    if (!owner || !renter || !vehicle) return createError(404);
     else {
       const borrow = await Borrow.create({ownerId, renterId, vehicleId, message});
 
@@ -46,7 +46,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
         .json(borrow);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -58,7 +58,7 @@ router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
   try {
     const borrow = await Borrow.findById(borrowId);
 
-    if (!borrow) return next(createError(404));
+    if (!borrow) return createError(404);
     else {
       const borrowAccepted = await Borrow.findByIdAndUpdate({_id: borrowId}, {accepted: true}, {new: true});
       await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: true, available: false}, {new: true});
@@ -76,7 +76,7 @@ router.put('/accepted/:borrowId', isLoggedIn, async (req, res, next) => {
         .json(borrowAccepted);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -88,7 +88,7 @@ router.put('/rejected/:borrowId', isLoggedIn, async (req, res, next) => {
   try {
     const borrow = await Borrow.findById(borrowId);
 
-    if (!borrow) return next(createError(404));
+    if (!borrow) return createError(404);
     else {
       const borrowRejected = await Borrow.findByIdAndUpdate({_id: borrowId}, {rejected: true}, {new: true});
 
@@ -104,7 +104,7 @@ router.put('/rejected/:borrowId', isLoggedIn, async (req, res, next) => {
         .json(borrowRejected);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -116,7 +116,7 @@ router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
   try {
     const borrow = await Borrow.findById(borrowId);
 
-    if (!borrow) return next(createError(404));
+    if (!borrow) return createError(404);
     else {
       const borrowCompleted = await Borrow.findByIdAndUpdate({_id: borrowId}, {completed: true, latitude, longitude}, {new: true});
       await Vehicle.findByIdAndUpdate({_id: vehicleId}, {inUse: false, available: true}, {new: true});
@@ -133,7 +133,7 @@ router.put('/completed/:borrowId', isLoggedIn, async (req, res, next) => {
         .json(borrowCompleted);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -143,7 +143,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 
   try {
     const user = await User.findById(userId);
-    if (!user) return next(createError(404));
+    if (!user) return createError(404);
     else {
       const borrowListAsOwner = await Borrow.find({ownerId: userId}).populate('vehicleId ownerId renterId');
       const borrowListAsRenter = await Borrow.find({renterId: userId}).populate('vehicleId ownerId renterId');
@@ -155,7 +155,7 @@ router.get('/', isLoggedIn, async (req, res, next) => {
         .json(borrowList);
     }
   } catch (error) {
-    next(createError(error))
+    createError(error);
   }
 });
 

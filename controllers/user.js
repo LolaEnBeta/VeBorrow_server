@@ -19,7 +19,7 @@ router.put('/:userId', isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
-    if(!user) return next(createError(404));
+    if(!user) return createError(404);
     else {
       const userUpdated = await User.findByIdAndUpdate({_id: userId}, {firstName, lastName, phoneNumber}, {new: true}).populate('vehicles');
 
@@ -31,7 +31,7 @@ router.put('/:userId', isLoggedIn, async (req, res, next) => {
       .json(userUpdated);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
@@ -42,7 +42,7 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findById(userId);
 
-    if (!user) return next(createError(404));
+    if (!user) return createError(404);
     else {
       await User.deleteOne({_id: userId});
 
@@ -54,7 +54,7 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
     }
 
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 })
 
@@ -65,7 +65,7 @@ router.get('/:userId', isLoggedIn, async (req, res, next) => {
   try {
     const user = await User.findById(userId).populate('vehicles');
 
-    if (!user) return next(createError(404));
+    if (!user) return createError(404);
     else {
       user.password = "*";
       req.session.currentUser = user;
@@ -75,7 +75,7 @@ router.get('/:userId', isLoggedIn, async (req, res, next) => {
         .json(user);
     }
   } catch (error) {
-    next(createError(error));
+    createError(error);
   }
 });
 
