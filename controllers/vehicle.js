@@ -11,6 +11,7 @@ const {
   getAllVehiclesAvailables,
   updateVehicle,
   deleteVehicle,
+  createVehicle,
 } = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
@@ -26,21 +27,11 @@ router.post('/', isLoggedIn, async (req, res, next) => {
   const ownerId = req.session.currentUser._id;
 
   try {
-    const vehicle = await Vehicle.create({ type, ownerId });
-
-    const user = await User.findById(ownerId);
-    if (!user) return next(createError(error));
-
-    user.vehicles.push(vehicle._id);
-
-    const updatedUser = await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: true}, {new: true}).populate('vehicles');
-
-    updatedUser.password = "*";
-    req.session.currentUser = updatedUser;
+    const newVehicle = await createVehicle(type, ownerId);
 
     res
       .status(201)
-      .json(vehicle);
+      .json(newVehicle);
   } catch (error) {
     next(createError(error));
   }

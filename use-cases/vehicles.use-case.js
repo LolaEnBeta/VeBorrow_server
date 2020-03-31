@@ -38,10 +38,22 @@ const deleteVehicle = async (vehicleId, userId) => {
   return deletedVehicle;
 }
 
+const createVehicle = async (type, ownerId) => {
+  const vehicle = await Vehicle.create({ type, ownerId });
+
+  const user = await User.findById(ownerId);
+  user.vehicles.push(vehicle._id);
+
+  await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: true}, {new: true}).populate('vehicles');
+
+  return vehicle;
+}
+
 module.exports = {
   getAllVehicles,
   getVehicleById,
   getAllVehiclesAvailables,
   updateVehicle,
   deleteVehicle,
+  createVehicle,
 };
