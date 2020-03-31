@@ -10,6 +10,7 @@ const {
   getUserVehicles,
   getOneVehicle,
   getAllTheAvailables,
+  deleteOneVehicle,
 } = require("../repository/vehicleRepository");
 
 const getAllVehicles = async (userId) => {
@@ -44,7 +45,7 @@ const deleteVehicle = async (vehicleId, userId) => {
 
   await updateUserVehicles(user);
 
-  const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
+  const deletedVehicle = await deleteOneVehicle(vehicleId);
 
   return deletedVehicle;
 }

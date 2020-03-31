@@ -15,8 +15,14 @@ const getAllTheAvailables = async () => {
   return availableVehicles;
 }
 
+const deleteOneVehicle = async (vehicleId) => {
+  const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
+  return deletedVehicle;
+}
+
 module.exports = {
   getUserVehicles,
   getOneVehicle,
   getAllTheAvailables,
+  deleteOneVehicle,
 }
