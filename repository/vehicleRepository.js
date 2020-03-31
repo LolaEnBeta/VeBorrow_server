@@ -20,9 +20,15 @@ const deleteOneVehicle = async (vehicleId) => {
   return deletedVehicle;
 }
 
+const createOneVehicle = async (type, ownerId) => {
+  const vehicle = await Vehicle.create({ type, ownerId });
+  return vehicle;
+}
+
 module.exports = {
   getUserVehicles,
   getOneVehicle,
   getAllTheAvailables,
   deleteOneVehicle,
+  createOneVehicle,
 }

@@ -11,6 +11,7 @@ const {
   getOneVehicle,
   getAllTheAvailables,
   deleteOneVehicle,
+  createOneVehicle,
 } = require("../repository/vehicleRepository");
 
 const getAllVehicles = async (userId) => {
@@ -51,12 +52,14 @@ const deleteVehicle = async (vehicleId, userId) => {
 }
 
 const createVehicle = async (type, ownerId) => {
-  const vehicle = await Vehicle.create({ type, ownerId });
+  const vehicle = await createOneVehicle(type, ownerId);
 
-  const user = await User.findById(ownerId);
+  const user = await getUser(ownerId);
+
   user.vehicles.push(vehicle._id);
+  user.owner = true;
 
-  await User.findByIdAndUpdate({_id: user._id}, {vehicles: user.vehicles, owner: true}, {new: true}).populate('vehicles');
+  await updateUserVehicles(user);
 
   return vehicle;
 }
