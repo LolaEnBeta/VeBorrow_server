@@ -4,6 +4,7 @@ const User = require("../models/User");
 const {
   getUserVehicles,
   getOneVehicle,
+  getAllTheAvailables,
 } = require("../repository/vehicleRepository");
 
 const getAllVehicles = async (userId) => {
@@ -18,7 +19,7 @@ const getVehicleById = async (vehicleId) => {
 }
 
 const getAllVehiclesAvailables = async () => {
-  const useravailableVehicles = await Vehicle.find({available: true});
+  const useravailableVehicles = await getAllTheAvailables();
   return useravailableVehicles;
 }
 
