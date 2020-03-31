@@ -10,11 +10,11 @@ const cors = require('cors');
 require('dotenv').config();
 const webpush = require('web-push');
 
-const auth = require('./routes/auth');
-const user = require('./routes/user');
-const vehicle = require('./routes/vehicle');
-const borrow = require('./routes/borrow');
-const subscribe = require('./routes/subscribe');
+const auth = require('./controllers/auth');
+const user = require('./controllers/user');
+const vehicle = require('./controllers/vehicle');
+const borrow = require('./controllers/borrow');
+const subscribe = require('./controllers/subscribe');
 
 
 // MONGOOSE CONNECTION
