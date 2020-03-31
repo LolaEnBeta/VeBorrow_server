@@ -2,6 +2,10 @@ const Vehicle = require("../models/Vehicle");
 const User = require("../models/User");
 
 const {
+  getUser,
+} = require("../repository/userRepository");
+
+const {
   getUserVehicles,
   getOneVehicle,
   getAllTheAvailables,
@@ -29,7 +33,7 @@ const updateVehicle = async (vehicleId, latitude, longitude, available) => {
 }
 
 const deleteVehicle = async (vehicleId, userId) => {
-  const user = await User.findById(userId);
+  const user = await getUser(userId);
 
   const vehicleIndex = user.vehicles.indexOf(vehicleId);
 
