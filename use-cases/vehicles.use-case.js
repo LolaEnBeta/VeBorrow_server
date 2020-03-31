@@ -3,6 +3,7 @@ const User = require("../models/User");
 
 const {
   getUserVehicles,
+  getOneVehicle,
 } = require("../repository/vehicleRepository");
 
 const getAllVehicles = async (userId) => {
@@ -12,7 +13,7 @@ const getAllVehicles = async (userId) => {
 }
 
 const getVehicleById = async (vehicleId) => {
-  const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
+  const vehicle = await getOneVehicle(vehicleId);
   return vehicle;
 }
 

@@ -5,6 +5,12 @@ const getUserVehicles = async (userId) => {
   return userVehicles;
 }
 
+const getOneVehicle = async (vehicleId) => {
+  const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
+  return vehicle;
+}
+
 module.exports = {
   getUserVehicles,
+  getOneVehicle,
 }
