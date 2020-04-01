@@ -2,20 +2,15 @@ const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
 
-const User = require("../models/User");
-const Vehicle = require("../models/Vehicle");
-
 const vehicleUseCase = require("../use-cases/vehicles.use-case");
 
 // HELPER FUNCTIONS
 const {
   isLoggedIn,
-  isNotLoggedIn,
-  validationLogin
 } = require("../helpers/middlewares");
 
 // POST /vehicles
-router.post('/', isLoggedIn, async (req, res, next) => {
+router.post('/', isLoggedIn, async (req, res) => {
   const { type } = req.body;
   const ownerId = req.session.currentUser._id;
 
@@ -31,7 +26,7 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 });
 
 // PUT /vehicles/:vehicleId
-router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
+router.put('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
   const { latitude, longitude, available } = req.body;
 
@@ -46,7 +41,7 @@ router.put('/:vehicleId', isLoggedIn, async (req, res, next) => {
 })
 
 // DELETE /vehicles/:vehicleId
-router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
+router.delete('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
   const userId = req.session.currentUser._id
 
@@ -61,7 +56,7 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res, next) => {
 })
 
 // GET /vehicles/available
-router.get('/available', isLoggedIn, async (req, res, next) => {
+router.get('/available', isLoggedIn, async (req, res) => {
 
   try {
     const useravailableVehicles = await vehicleUseCase.getAllVehiclesAvailables();
@@ -74,7 +69,7 @@ router.get('/available', isLoggedIn, async (req, res, next) => {
 });
 
 // GET /vehicles/:vehicleId
-router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
+router.get('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
 
   try {
@@ -89,7 +84,7 @@ router.get('/:vehicleId', isLoggedIn, async (req, res, next) => {
 })
 
 // GET /vehicles
-router.get('/', isLoggedIn, async (req, res, next) => {
+router.get('/', isLoggedIn, async (req, res) => {
   const userId = req.session.currentUser._id;
 
   try {
