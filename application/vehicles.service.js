@@ -1,7 +1,7 @@
 const userRepository = require("../repository/userRepository");
 const vehicleRepository = require("../repository/vehicleRepository");
 
-class VehicleUseCase {
+class VehicleService {
   async getAllVehicles(userId) {
     const userVehicles = await vehicleRepository.getUserVehicles(userId);
 
@@ -59,4 +59,4 @@ class VehicleUseCase {
   }
 }
 
-module.exports = new VehicleUseCase();
+module.exports = new VehicleService();

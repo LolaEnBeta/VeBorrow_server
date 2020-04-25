@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
 
-const vehicleUseCase = require("../use-cases/vehicles.use-case");
+const vehicleService = require("../application/vehicles.service");
+
 // TODO Create common interface for all use cases
 
 const {
@@ -14,7 +15,7 @@ router.post('/', isLoggedIn, async (req, res) => {
   const ownerId = req.session.currentUser._id;
 
   try {
-    const newVehicle = await vehicleUseCase.createVehicle(type, ownerId);
+    const newVehicle = await vehicleService.createVehicle(type, ownerId);
 
     res
       .status(201)
@@ -29,7 +30,7 @@ router.put('/:vehicleId', isLoggedIn, async (req, res) => {
   const { latitude, longitude, available } = req.body;
 
   try {
-    const vehicleUpdated = await vehicleUseCase.updateVehicle(vehicleId, latitude, longitude, available);
+    const vehicleUpdated = await vehicleService.updateVehicle(vehicleId, latitude, longitude, available);
     res
       .status(201)
       .json(vehicleUpdated);
@@ -43,7 +44,7 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res) => {
   const userId = req.session.currentUser._id
 
   try {
-    const deletedVehicle = await vehicleUseCase.deleteVehicle(vehicleId, userId);
+    const deletedVehicle = await vehicleService.deleteVehicle(vehicleId, userId);
     res
       .status(200)
       .json(deletedVehicle);
@@ -55,7 +56,7 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res) => {
 router.get('/available', isLoggedIn, async (req, res) => {
 
   try {
-    const useravailableVehicles = await vehicleUseCase.getAllVehiclesAvailables();
+    const useravailableVehicles = await vehicleService.getAllVehiclesAvailables();
     res
       .status(200)
       .json(useravailableVehicles);
@@ -68,7 +69,7 @@ router.get('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
 
   try {
-    const vehicle = await vehicleUseCase.getVehicleById(vehicleId);
+    const vehicle = await vehicleService.getVehicleById(vehicleId);
 
     res
       .status(200)
@@ -82,7 +83,7 @@ router.get('/', isLoggedIn, async (req, res) => {
   const userId = req.session.currentUser._id;
 
   try {
-    const userVehicles = await vehicleUseCase.getAllVehicles(userId);
+    const userVehicles = await vehicleService.getAllVehicles(userId);
 
     res
       .status(200)
