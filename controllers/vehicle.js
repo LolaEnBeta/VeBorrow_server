@@ -3,13 +3,12 @@ const router = express.Router();
 const createError = require("http-errors");
 
 const vehicleUseCase = require("../use-cases/vehicles.use-case");
+// TODO Create common interface for all use cases
 
-// HELPER FUNCTIONS
 const {
   isLoggedIn,
 } = require("../helpers/middlewares");
 
-// POST /vehicles
 router.post('/', isLoggedIn, async (req, res) => {
   const { type } = req.body;
   const ownerId = req.session.currentUser._id;
@@ -25,7 +24,6 @@ router.post('/', isLoggedIn, async (req, res) => {
   }
 });
 
-// PUT /vehicles/:vehicleId
 router.put('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
   const { latitude, longitude, available } = req.body;
@@ -40,7 +38,6 @@ router.put('/:vehicleId', isLoggedIn, async (req, res) => {
   }
 })
 
-// DELETE /vehicles/:vehicleId
 router.delete('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
   const userId = req.session.currentUser._id
@@ -55,7 +52,6 @@ router.delete('/:vehicleId', isLoggedIn, async (req, res) => {
   }
 })
 
-// GET /vehicles/available
 router.get('/available', isLoggedIn, async (req, res) => {
 
   try {
@@ -68,7 +64,6 @@ router.get('/available', isLoggedIn, async (req, res) => {
   }
 });
 
-// GET /vehicles/:vehicleId
 router.get('/:vehicleId', isLoggedIn, async (req, res) => {
   const { vehicleId } = req.params;
 
@@ -83,7 +78,6 @@ router.get('/:vehicleId', isLoggedIn, async (req, res) => {
   }
 })
 
-// GET /vehicles
 router.get('/', isLoggedIn, async (req, res) => {
   const userId = req.session.currentUser._id;
 

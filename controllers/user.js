@@ -4,14 +4,14 @@ const createError = require("http-errors");
 
 const User = require("../models/User");
 
-// HELPER FUNCTIONS
+// TODO Create use cases for this controller
+
 const {
   isLoggedIn,
   isNotLoggedIn,
   validationLogin
 } = require("../helpers/middlewares");
 
-// PUT /user/:userId
 router.put('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
   const { firstName, lastName, phoneNumber } = req.body;
@@ -27,7 +27,7 @@ router.put('/:userId', isLoggedIn, async (req, res, next) => {
       req.session.currentUser = userUpdated;
 
       res
-      .status(201)
+      .status(201)  // TODO this shouldn't be a 201
       .json(userUpdated);
     }
   } catch (error) {
@@ -35,7 +35,6 @@ router.put('/:userId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-// DELETE /user/:userId
 router.delete('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
 
@@ -58,7 +57,6 @@ router.delete('/:userId', isLoggedIn, async (req, res, next) => {
   }
 })
 
-// GET /user/:userId
 router.get('/:userId', isLoggedIn, async (req, res, next) => {
   const { userId } = req.params;
 
