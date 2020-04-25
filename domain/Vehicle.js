@@ -1,5 +1,6 @@
 class Vehicle {
-  constructor(type, ownerId, latitude, longitude, available, inUse) {
+  constructor(id, type, ownerId, latitude, longitude, available, inUse) {
+    this._id = id;
     this.type = type;
     this.ownerId = ownerId;
     this.latitude = latitude;

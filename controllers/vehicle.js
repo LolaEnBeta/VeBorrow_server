@@ -4,8 +4,6 @@ const createError = require("http-errors");
 
 const vehicleService = require("../application/vehicles.service");
 
-// TODO Create common interface for all use cases
-
 const {
   isLoggedIn,
 } = require("../helpers/middlewares");

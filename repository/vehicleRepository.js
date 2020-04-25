@@ -1,41 +1,100 @@
-const Vehicle = require("../models/Vehicle");
+const VehicleMongoose = require("../models/Vehicle");
+const Vehicle = require("../domain/Vehicle");
 
 class VehicleRepository {
   async getUserVehicles(userId) {
-    const userVehicles = await Vehicle.find({ownerId: userId});
-    return userVehicles;
+    const userVehicles = await VehicleMongoose.find({ ownerId: userId });
+
+    const vehicles = userVehicles.map(
+      vehicle =>
+        new Vehicle(
+          vehicle._id,
+          vehicle.type,
+          vehicle.ownerId,
+          vehicle.latitude,
+          vehicle.longitude,
+          vehicle.available,
+          vehicle.inUse
+        )
+    );
+
+    return vehicles;
   }
 
   async getOneVehicle(vehicleId) {
-    const vehicle = await Vehicle.findById(vehicleId).populate("ownerId");
+    const mongooseVehicle = await VehicleMongoose.findById(vehicleId).populate(
+      "ownerId"
+    );
+
+    const vehicle = new Vehicle(
+      mongooseVehicle._id,
+      mongooseVehicle.type,
+      mongooseVehicle.ownerId,
+      mongooseVehicle.latitude,
+      mongooseVehicle.longitude,
+      mongooseVehicle.available,
+      mongooseVehicle.inUse
+    );
+
     return vehicle;
   }
 
   async getAllTheAvailables() {
-    const availableVehicles = await Vehicle.find({available: true});
-    return availableVehicles;
+    const availableVehicles = await VehicleMongoose.find({ available: true });
+    const vehicles = availableVehicles.map(
+      vehicle =>
+        new Vehicle(
+          vehicle._id,
+          vehicle.type,
+          vehicle.ownerId,
+          vehicle.latitude,
+          vehicle.longitude,
+          vehicle.available,
+          vehicle.inUse
+        )
+    );
+    return vehicles;
   }
 
   async deleteOneVehicle(vehicleId) {
-    const deletedVehicle = await Vehicle.findByIdAndDelete(vehicleId);
-    return deletedVehicle;
+    const deletedVehicle = await VehicleMongoose.findByIdAndDelete(vehicleId);
+    const vehicle = new Vehicle(
+      deletedVehicle._id,
+      deletedVehicle.type,
+      deletedVehicle.ownerId,
+      deletedVehicle.latitude,
+      deletedVehicle.longitude,
+      deletedVehicle.available,
+      deletedVehicle.inUse
+    );
+    return vehicle;
   }
 
   async createOneVehicle(type, ownerId) {
-    const vehicle = await Vehicle.create({ type, ownerId });
+    const mongooseVehicle = await VehicleMongoose.create({ type, ownerId });
+    const vehicle = new Vehicle(
+      mongooseVehicle._id,
+      mongooseVehicle.type,
+      mongooseVehicle.ownerId,
+      mongooseVehicle.latitude,
+      mongooseVehicle.longitude,
+      mongooseVehicle.available,
+      mongooseVehicle.inUse
+    );
     return vehicle;
   }
 
   async updateOneVehicle(vehicle) {
-    const vehicleUpdated = await Vehicle.findByIdAndUpdate({_id: vehicle._id},
+    await VehicleMongoose.findByIdAndUpdate(
+      { _id: vehicle._id },
       {
         latitude: vehicle.latitude,
         longitude: vehicle.longitude,
         available: vehicle.available
-      }, {new: true});
-    return vehicleUpdated;
+      },
+      { new: true }
+    );
   }
 }
-
 
 module.exports = new VehicleRepository();

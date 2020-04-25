@@ -25,8 +25,8 @@ class VehicleService {
     vehicle.longitude = longitude;
     vehicle.available = available;
 
-    const vehicleUpdated = await vehicleRepository.updateOneVehicle(vehicle);
-    return vehicleUpdated;
+    await vehicleRepository.updateOneVehicle(vehicle);
+    return vehicle;
   }
 
   async deleteVehicle(vehicleId, userId) {
