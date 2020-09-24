@@ -181,16 +181,12 @@ Let’s make this world more easy and friendly =)
 
 ## Links
 
-### Trello
-[Trello board Link](https://trello.com/b/oL9dar4Q/veborrow-final-project)
-
 ## Git
 [Client repository Link](https://github.com/LolaEnBeta/VeBorrow_client)
 [Server repository Link](https://github.com/LolaEnBeta/VeBorrow_server)
 [Deploy Link]()
 
 ## Slides
-
 [Slides Link](https://docs.google.com/presentation/d/1sSamG3yreYOO49jIdP0HRbONaeI-yyBFhn2EEqsKaEE/edit)
 
 
